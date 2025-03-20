@@ -62,18 +62,18 @@ fi
 # -----------------------------
 # 3) lsd 설치 (Rust toolchain 필요)
 # -----------------------------
-if ! command -v lsd >/dev/null 2>&1; then
-  echo "[lsd] Not found. Installing via cargo..."
-  if command -v cargo >/dev/null 2>&1; then
-    cargo install lsd --root "$HOME_DIR/.local"
-    echo "[lsd] Installed to $HOME_DIR/.local. Binaries are in $LOCAL_BIN."
-  else
-    echo "[lsd] Cargo not found. Please install Rust toolchain and try again."
-    exit 1
-  fi
-else
-  echo "[lsd] Already installed, skipping."
-fi
+# if ! command -v lsd >/dev/null 2>&1; then
+#   echo "[lsd] Not found. Installing via cargo..."
+#   if command -v cargo >/dev/null 2>&1; then
+#     cargo install lsd --root "$HOME_DIR/.local"
+#     echo "[lsd] Installed to $HOME_DIR/.local. Binaries are in $LOCAL_BIN."
+#   else
+#     echo "[lsd] Cargo not found. Please install Rust toolchain and try again."
+#     exit 1
+#   fi
+# else
+#   echo "[lsd] Already installed, skipping."
+# fi
 
 # -----------------------------
 # 4) oh-my-zsh 설치 (없을 경우)
