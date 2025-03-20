@@ -28,9 +28,6 @@ setopt HIST_IGNORE_ALL_DUPS
 setopt HIST_IGNORE_SPACE
 setopt HIST_REDUCE_BLANKS
 
-# Default editor
-export EDITOR=vim
-
 # Automatically start tmux if not already inside tmux
 # (Avoid nesting if already in a tmux session)
 if [ -z "$TMUX" ]; then
