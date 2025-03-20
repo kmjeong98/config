@@ -99,16 +99,16 @@ else
 fi
 
 # -----------------------------
-# 6) dotfiles 심볼릭 링크: zshrc, tmux.conf, Neovim 설정
+# 6) dotfiles zshrc, tmux.conf, Neovim 설정
 # -----------------------------
-echo "[dotfiles] Creating symbolic links..."
+echo "[dotfiles] Moving"
 # zshrc -> ~/.zshrc
-ln -sf "$SCRIPT_DIR/zshrc" "$HOME_DIR/.zshrc"
+mv "$SCRIPT_DIR/zshrc" "$HOME_DIR/.zshrc"
 # tmux.conf -> ~/.tmux.conf
-ln -sf "$SCRIPT_DIR/tmux.conf" "$HOME_DIR/.tmux.conf"
+mv "$SCRIPT_DIR/tmux.conf" "$HOME_DIR/.tmux.conf"
 # Neovim init.vim -> ~/.config/nvim/init.vim
 mkdir -p "$HOME_DIR/.config/nvim"
-ln -sf "$SCRIPT_DIR/config/nvim/init.vim" "$HOME_DIR/.config/nvim/init.vim"
+mv "$SCRIPT_DIR/config/nvim/init.vim" "$HOME_DIR/.config/nvim/init.vim"
 
 # -----------------------------
 # 8) vim-plug (Neovim)
