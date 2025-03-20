@@ -92,8 +92,8 @@ fi
 # -----------------------------
 if [ ! -d "$HOME_DIR/.oh-my-zsh/custom/themes/powerlevel10k" ]; then
   echo "[powerlevel10k] Not found. Installing powerlevel10k theme..."
-  git clone --depth=1 https://github.com/romkatv/powerlevel10k.git \
-    "$HOME_DIR/.oh-my-zsh/custom/themes/powerlevel10k"
+  git clone --depth=1 https://github.com/romkatv/powerlevel10k.git "${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k"
+
 else
   echo "[powerlevel10k] Already installed, skipping."
 fi
