@@ -111,37 +111,6 @@ mkdir -p "$HOME_DIR/.config/nvim"
 ln -sf "$SCRIPT_DIR/config/nvim/init.vim" "$HOME_DIR/.config/nvim/init.vim"
 
 # -----------------------------
-# 7) ~/.zshrc.local 파일 관리
-#    => ~/.zshrc는 저장소 파일(심볼릭 링크) 이므로,
-#       사용자 PATH 같은 로컬 설정은 zshrc.local에 따로 추가
-# -----------------------------
-LOCAL_ZSHRC="$HOME_DIR/.zshrc.local"
-# zshrc가 ~/.zshrc.local을 로드하도록 확인 (이미 있으면 스킵)
-if ! grep -q 'source ~/.zshrc.local' "$SCRIPT_DIR/zshrc"; then
-  echo "source ~/.zshrc.local" >> "$SCRIPT_DIR/zshrc"
-  echo "[dotfiles] Added 'source ~/.zshrc.local' to repository zshrc."
-fi
-
-# ~/.zshrc.local 없으면 생성
-if [ ! -f "$LOCAL_ZSHRC" ]; then
-  echo '# Put your local overrides or PATH exports here' > "$LOCAL_ZSHRC"
-fi
-
-# ~/.local/bin을 PATH에 추가
-if ! grep -q 'export PATH="$HOME/.local/bin:$PATH"' "$LOCAL_ZSHRC"; then
-  echo 'export PATH="$HOME/.local/bin:$PATH"' >> "$LOCAL_ZSHRC"
-  echo "[dotfiles] Added ~/.local/bin to PATH in ~/.zshrc.local"
-fi
-
-# powerlevel10k 테마 설정 (이미 ~/.zshrc 자체에서 설정 가능하지만, 
-# 여기서는 zshrc.local로도 추가 가능)
-if ! grep -q 'ZSH_THEME="powerlevel10k/powerlevel10k"' "$LOCAL_ZSHRC" \
-   && ! grep -q 'ZSH_THEME="powerlevel10k/powerlevel10k"' "$SCRIPT_DIR/zshrc"; then
-  echo 'export ZSH_THEME="powerlevel10k/powerlevel10k"' >> "$LOCAL_ZSHRC"
-  echo "[dotfiles] Added powerlevel10k theme config to ~/.zshrc.local"
-fi
-
-# -----------------------------
 # 8) vim-plug (Neovim)
 # -----------------------------
 echo "[Neovim] Installing vim-plug..."
