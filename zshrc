@@ -96,3 +96,5 @@ alias deact='deactivate'
 alias zrc="nvim ~/.zshrc"
 alias reload="source ~/.zshrc"
 source ~/.p10k/powerlevel10k.zsh-theme
+
+export PATH="$HOME/.local/bin:$PATH
