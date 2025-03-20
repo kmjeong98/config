@@ -38,10 +38,10 @@ eval "$(jump shell)"
 
 
 ### 🟢 LS 명령어 개선 (lsd 사용) ###
-alias ls='lsd'
-alias ll='lsd -l'
-alias la='lsd -la'
-alias lt='lsd --tree'   # 트리 형태로 출력
+alias ls='ls'
+alias ll='ls -l'
+alias la='ls -la'
+alias lt='ls --tree'   # 트리 형태로 출력
 
 ### 🟣 Git 단축 명령어 ###
 alias g='git'
