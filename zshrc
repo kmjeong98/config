@@ -2,6 +2,8 @@
 # ~/.zshrc
 # ---------------------------------------------
 
+ZSH_THEME="powerlevel10k/powerlevel10k"
+
 # Use powerlevel10k if already installed
 # Load Powerlevel10k theme (Example)
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
@@ -97,4 +99,4 @@ alias zrc="nvim ~/.zshrc"
 alias reload="source ~/.zshrc"
 source ~/.p10k/powerlevel10k.zsh-theme
 
-export PATH="$HOME/.local/bin:$PATH
+export PATH=$HOME/.local/bin:$PATH
