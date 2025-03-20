@@ -103,12 +103,12 @@ fi
 # -----------------------------
 echo "[dotfiles] Moving"
 # zshrc -> ~/.zshrc
-mv "$SCRIPT_DIR/zshrc" "$HOME_DIR/.zshrc"
+mv -f "$SCRIPT_DIR/zshrc" "$HOME_DIR/.zshrc"
 # tmux.conf -> ~/.tmux.conf
-mv "$SCRIPT_DIR/tmux.conf" "$HOME_DIR/.tmux.conf"
+mv -f "$SCRIPT_DIR/tmux.conf" "$HOME_DIR/.tmux.conf"
 # Neovim init.vim -> ~/.config/nvim/init.vim
 mkdir -p "$HOME_DIR/.config/nvim"
-mv "$SCRIPT_DIR/config/nvim/init.vim" "$HOME_DIR/.config/nvim/init.vim"
+mv -f "$SCRIPT_DIR/config/nvim/init.vim" "$HOME_DIR/.config/nvim/init.vim"
 
 # -----------------------------
 # 8) vim-plug (Neovim)
