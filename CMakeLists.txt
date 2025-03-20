@@ -9,8 +9,7 @@ add_custom_target(install_dotfiles ALL
     # Print start message
     COMMAND ${CMAKE_COMMAND} -E echo "Starting dotfiles installation..."
     
-    # 1. 시스템 패키지 설치
-    # Note: This command checks for Homebrew (macOS) or apt-get (Ubuntu/Debian)
+    # 1. 시스템 패키지 설치 (macOS: Homebrew, Ubuntu/Debian: apt-get)
     COMMAND ${CMAKE_COMMAND} -E env sh -c "if command -v brew >/dev/null 2>&1; then \
         echo 'Using Homebrew'; brew update && brew install zsh neovim tmux; \
     elif command -v apt-get >/dev/null 2>&1; then \
