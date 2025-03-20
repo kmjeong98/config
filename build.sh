@@ -109,9 +109,9 @@ mkdir -p "$HOME_DIR/.config/nvim"
 ln -sf "$SCRIPT_DIR/config/nvim/init.vim" "$HOME_DIR/.config/nvim/init.vim"
 
 # ~/.local/bin 경로를 ~/.zshrc에 등록 (이미 없으면 추가)
-if ! grep -q 'export PATH="$HOME/.local/bin:$PATH"' "$HOME_DIR/.zshrc"; then
-  echo 'export PATH="$HOME/.local/bin:$PATH"' >> "$HOME_DIR/.zshrc"
-  echo "[dotfiles] Added ~/.local/bin to PATH in ~/.zshrc"
+if ! grep -q 'export PATH="$HOME/.local/bin:$PATH"' "zshrc"; then
+  echo 'export PATH="$HOME/.local/bin:$PATH"' >> "zshrc"
+  echo "[dotfiles] Added ~/.local/bin to PATH in zshrc"
 else
   echo "[dotfiles] ~/.local/bin already in PATH, skipping."
 fi
