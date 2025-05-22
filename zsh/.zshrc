@@ -28,16 +28,13 @@ setopt HIST_IGNORE_ALL_DUPS
 setopt HIST_IGNORE_SPACE
 setopt HIST_REDUCE_BLANKS
 
-# Automatically start tmux if not already inside tmux
-# (Avoid nesting if already in a tmux session)
-if [ -z "$TMUX" ]; then
-  tmux
-fi
+# Default editor
+export EDITOR=vim
 
 eval "$(jump shell)"
 
-
 ### 🟢 LS 명령어 개선 (lsd 사용) ###
+alias l='lsd'
 alias ls='lsd'
 alias ll='lsd -l'
 alias la='lsd -la'
@@ -74,8 +71,6 @@ alias cls='clear'            # 터미널 클리어
 
 ### 🟠 Vim 관련 ###
 alias v='nvim'
-alias vi='nvim'
-alias vim='nvim'
 alias vrc='nvim ~/.config/nvim/init.vim'
 
 ### 🟢 Docker 관련 ###
@@ -90,9 +85,14 @@ alias py='python3'
 alias pip='pip3'
 alias venv='python3 -m venv venv'
 alias act='source venv/bin/activate'
+alias actl='source ~/venv/bin/activate'
 alias deact='deactivate'
 
 ### 🟢 Zsh 설정 ###
 alias zrc="nvim ~/.zshrc"
 alias reload="source ~/.zshrc"
 source ~/.p10k/powerlevel10k.zsh-theme
+setopt AUTO_CD
+
+## Environment settings
+export PATH=$PATH:/home/kunmo/llvm-project/build/bin
