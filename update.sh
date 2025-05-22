@@ -1,13 +1,12 @@
 #!/bin/bash
 
-CONFIG="$HOME/config"
+CONFIG="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 cp ~/.zshrc "$CONFIG/zsh/.zshrc"
-cp ~/.tmux.conf "$DOTFILES/tmux/.tmux.conf"
-rsync -a --delete ~/.config/nvim/ "$DOTFILES/nvim/"
+cp ~/.tmux.conf "$CONFIG/tmux/.tmux.conf"
+rsync -a --delete ~/.config/nvim/ "$CONFIG/nvim/"
 
-cd "$DOTFILES"
+cd "$CONFIG"
 git add .
 git commit -m "Update from $(hostname)"
 git push
-
