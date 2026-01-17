@@ -1,168 +1,165 @@
-" ---------------------------------------------
-" ~/.config/nvim/init.vim
-" ---------------------------------------------
+" ============================================================
+" Neovim Configuration
+" ============================================================
 
-" Use VIM Plug for plugin management
-call plug#begin('~/.local/share/nvim/plugged')
+" Auto-install vim-plug if not present
+let data_dir = has('nvim') ? stdpath('data') . '/site' : '~/.vim'
+if empty(glob(data_dir . '/autoload/plug.vim'))
+  silent execute '!curl -fLo '.data_dir.'/autoload/plug.vim --create-dirs  https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
+  autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
+endif
 
-" Gruvbox colorscheme
-Plug 'morhetz/gruvbox'
-" NERDTree
+" ============================================================
+" Plugins
+" ============================================================
+call plug#begin(stdpath('data') . '/plugged')
+
+" File Explorer
 Plug 'preservim/nerdtree'
-" Airline for status line
+
+" GitHub Copilot (requires Node.js 17+)
+Plug 'github/copilot.vim'
+
+" Status line
 Plug 'vim-airline/vim-airline'
-" Neoformat for formatting
-Plug 'sbdchd/neoformat'
-" Auto commenting
-Plug 'numToStr/Comment.nvim'
-" Cursor smear effect
-Plug 'sphamba/smear-cursor.nvim'
+Plug 'vim-airline/vim-airline-themes'
 
-" Mason: Portable package manager for Neovim
-Plug 'williamboman/mason.nvim'
+" Syntax highlighting
+Plug 'sheerun/vim-polyglot'
 
-" Mason LSPConfig: Bridges mason.nvim with nvim-lspconfig
-Plug 'williamboman/mason-lspconfig.nvim'
-
-Plug 'neovim/nvim-lspconfig'
-Plug 'hrsh7th/cmp-nvim-lsp'
-Plug 'hrsh7th/cmp-buffer'
-Plug 'hrsh7th/cmp-path'
-Plug 'hrsh7th/cmp-cmdline'
-Plug 'hrsh7th/nvim-cmp'
-
+" Color scheme
+Plug 'morhetz/gruvbox'
 
 call plug#end()
 
-lua require('Comment').setup()
-lua require('smear_cursor').enabled = true
+" ============================================================
+" General Settings
+" ============================================================
 
-lua << EOF
--- Setup mason.nvim
-require("mason").setup()
+" Enable mouse in all modes
+set mouse=a
 
--- Setup mason-lspconfig with desired servers
-require("mason-lspconfig").setup({
-  ensure_installed = {"clangd", "lua_ls" },
-})
-
--- Setup nvim-cmp with vsnip and LSP support
-local cmp = require'cmp'
-
-cmp.setup({
-  snippet = {
-    expand = function(args)
-      vim.fn["vsnip#anonymous"](args.body) -- Use vsnip for snippets
-    end,
-  },
-  mapping = cmp.mapping.preset.insert({
-    ['<C-b>'] = cmp.mapping.scroll_docs(-4),
-    ['<C-f>'] = cmp.mapping.scroll_docs(4),
-    ['<C-Space>'] = cmp.mapping.complete(),
-    ['<C-e>'] = cmp.mapping.abort(),
-    ['<CR>'] = cmp.mapping.confirm({ select = true }),
-      ['<Tab>'] = cmp.mapping(function(fallback)
-    if cmp.visible() then
-      cmp.select_next_item()
-    else
-      fallback()
-    end
-  end, { "i", "s" }),
-  ['<S-Tab>'] = cmp.mapping(function(fallback)
-    if cmp.visible() then
-      cmp.select_prev_item()
-    else
-      fallback()
-    end
-  end, { "i", "s" }),
-  }),
-  sources = cmp.config.sources({
-    { name = 'nvim_lsp' },
-    { name = 'vsnip' },
-  }, {
-    { name = 'buffer' },
-  })
-})
-
--- Optional: Enable completion in command mode (/, ?, :)
-cmp.setup.cmdline({ '/', '?' }, {
-  mapping = cmp.mapping.preset.cmdline(),
-  sources = {
-    { name = 'buffer' }
-  }
-})
-
-cmp.setup.cmdline(':', {
-  mapping = cmp.mapping.preset.cmdline(),
-  sources = cmp.config.sources({
-    { name = 'path' }
-  }, {
-    { name = 'cmdline' }
-  }),
-  matching = { disallow_symbol_nonprefix_matching = false }
-})
-
--- Setup LSP capabilities for completion
-local capabilities = require('cmp_nvim_lsp').default_capabilities()
-
--- Example: Replace or duplicate for each LSP server you use
-require('lspconfig')['pyright'].setup {
-  capabilities = capabilities
-}
-EOF
-
-
-
-" Colorscheme settings
-syntax on
-set termguicolors
-set background=dark
-colorscheme gruvbox
-
-" Enable line numbers
+" Line numbers
 set number
+set relativenumber
+
+" Indentation
+set tabstop=4
+set shiftwidth=4
+set expandtab
+set smartindent
+set autoindent
+
+" Search
+set hlsearch
+set incsearch
+set ignorecase
+set smartcase
+
+" Appearance
+set termguicolors
+set cursorline
+set signcolumn=yes
+set scrolloff=8
+set wrap
 
 " Encoding
 set encoding=utf-8
 set fileencoding=utf-8
 
-" Clipboard: Use system clipboard
-:set clipboard=unnamedplus
+" Backup and swap
+set nobackup
+set nowritebackup
+set noswapfile
 
-" 마우스 활성화
-set mouse=a
+" Clipboard (use system clipboard)
+set clipboard=unnamedplus
 
+" Split behavior
+set splitright
+set splitbelow
 
+" Update time for faster response
+set updatetime=300
 
-" Paste toggle with F1
-" 'invpaste' toggles paste option, 'paste?' shows current paste state in cmdline
-nnoremap <F1> :set invpaste paste?<CR>
+" ============================================================
+" Color Scheme
+" ============================================================
+silent! colorscheme gruvbox
+set background=dark
 
+" ============================================================
+" Key Mappings
+" ============================================================
 
-nnoremap <F2> :NERDTreeToggle<CR>
+" Leader key
+let mapleader = " "
 
+" NERDTree toggle with Ctrl+n
+nnoremap <C-n> :NERDTreeToggle<CR>
 
-" Use F3 to format (via Neoformat)
-nnoremap <F3> :Neoformat<CR>
+" NERDTree find current file
+nnoremap <leader>nf :NERDTreeFind<CR>
 
-" Airline configuration (if desired)
+" Clear search highlight with Escape
+nnoremap <Esc> :nohlsearch<CR>
+
+" Better window navigation
+nnoremap <C-h> <C-w>h
+nnoremap <C-j> <C-w>j
+nnoremap <C-k> <C-w>k
+nnoremap <C-l> <C-w>l
+
+" Resize windows with arrows
+nnoremap <C-Up> :resize +2<CR>
+nnoremap <C-Down> :resize -2<CR>
+nnoremap <C-Left> :vertical resize -2<CR>
+nnoremap <C-Right> :vertical resize +2<CR>
+
+" Move lines up/down in visual mode
+vnoremap J :m '>+1<CR>gv=gv
+vnoremap K :m '<-2<CR>gv=gv
+
+" Stay in visual mode after indenting
+vnoremap < <gv
+vnoremap > >gv
+
+" Quick save and quit
+nnoremap <leader>w :w<CR>
+nnoremap <leader>q :q<CR>
+
+" Buffer navigation
+nnoremap <leader>bn :bnext<CR>
+nnoremap <leader>bp :bprevious<CR>
+nnoremap <leader>bd :bdelete<CR>
+
+" ============================================================
+" NERDTree Settings
+" ============================================================
+
+" Show hidden files
+let NERDTreeShowHidden=1
+
+" Close NERDTree when opening a file
+let NERDTreeQuitOnOpen=1
+
+" Ignore certain files
+let NERDTreeIgnore=['\.git$', '\.DS_Store', '__pycache__', '\.pyc$']
+
+" Auto-close vim if NERDTree is the only window left
+autocmd BufEnter * if winnr('$') == 1 && exists('b:NERDTree') && b:NERDTree.isTabTree() | quit | endif
+
+" ============================================================
+" Airline Settings
+" ============================================================
 let g:airline_powerline_fonts = 1
+let g:airline#extensions#tabline#enabled = 1
 
-" Some recommended settings for better experience
-set hidden           " Allow switching between buffers without saving
-set expandtab        " Use spaces instead of tabs
-set shiftwidth=2
-set tabstop=2
-set autoindent
-set smartindent
-
-" Set d as delete. Cutting is 'x'
-" Normal mode: <leader>d
-nnoremap <leader>d "_d
-
-" Visual mode: <leader>d
-vnoremap <leader>d "_d
-
-inoremap jk <Esc>
-nnoremap w <C-w>w
-inoremap <C-v> <C-r><C-o>+
+" ============================================================
+" Copilot Settings
+" ============================================================
+" Copilot key mappings (defaults work well)
+" Tab: Accept suggestion
+" Ctrl+]: Dismiss suggestion
+" Alt+]: Next suggestion
+" Alt+[: Previous suggestion

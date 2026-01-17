@@ -1,68 +1,125 @@
+# Terminal Coding Environment
 
-# LocalInstallDotfiles
+터미널 기반 개발 환경 설정 파일들입니다. Neovim, Tmux, Zsh를 사용하며, GitHub Copilot과 연동됩니다.
 
-이 저장소는 **Neovim과 tmux**를 소스에서 빌드해 로컬에 설치하고,  
-**oh-my-zsh**를 다운로드하여 설치(존재하지 않을 경우),  
-이미 이 저장소에 있는 **dotfiles**(zshrc, tmux.conf, Neovim 설정 등)를 심볼릭 링크로 연결하는 과정을  
-CMake 기반으로 자동화한 예시입니다.
+## ✨ 주요 기능
 
-## 주요 기능
+- **Neovim**: NERDTree, GitHub Copilot, 마우스 지원
+- **Tmux**: 마우스 지원, 편리한 창 분할
+- **Zsh**: Powerlevel10k 테마
 
-1. **Neovim 빌드/설치**  
-   - `nvim` 명령어가 없으면 `~/neovim_src`에 클론 후 빌드,  
-     `~/neovim_install` 경로에 설치합니다.  
-2. **tmux 빌드/설치**  
-   - `tmux` 명령어가 없으면 `~/tmux_src`에 클론 후 빌드,  
-     `~/.local` 경로에 설치합니다.  
-3. **oh-my-zsh 설치**  
-   - `~/.oh-my-zsh` 폴더가 없으면 install.sh를 wget으로 가져와 `--unattended` 설치합니다.  
-4. **dotfiles 심볼릭 링크**  
-   - (현재 저장소 내) `zshrc -> ~/.zshrc`  
-   - `tmux.conf -> ~/.tmux.conf`  
-   - `config/nvim/init.vim -> ~/.config/nvim/init.vim`  
-5. **vim-plug, tmux plugin manager**  
-   - vim-plug: Neovim용 plugin manager  
-   - tpm: tmux plugin manager
+## 📋 요구사항
 
-## 사전 요구 사항
+설치 전 다음 도구들이 필요합니다:
 
-- **CMake** (3.10 이상)
-- **Git**, **make**, **gcc**/**clang** 등 빌드 도구
-- **Neovim 소스 빌드** 시 필요 라이브러리  
-- **tmux 소스 빌드** 시 필요 라이브러리 (예: libevent, ncurses 등)
+| 도구 | 용도 | 설치 방법 |
+|------|------|-----------|
+| `git` | 버전 관리 | 기본 설치 |
+| `nvim` | 에디터 | `brew install neovim` |
+| `tmux` | 터미널 멀티플렉서 | `brew install tmux` |
+| `zsh` | 쉘 | 기본 설치 (macOS) |
+| `curl` | 다운로드 | 기본 설치 |
+| `node` (17+) | GitHub Copilot | `brew install node` |
 
-## 설치 및 실행 방법
+## 🚀 설치 방법
 
-1. **저장소 클론 (이미 이 프로젝트가 있는 경우 스킵)**  
-   ```bash
-   git clone https://github.com/kmjeong98/config.git
-   cd config
-   ```
+```bash
+# 1. 저장소 클론
+git clone https://github.com/YOUR_USERNAME/config.git ~/config
 
-2. **build.sh 실행**  
-   ```bash
-   chmod +x build.sh
-   ./build.sh
-   ```
-   - CMake가 실행되어 `install_dotfiles` 타겟이 순차적으로 수행됩니다.  
-   - Neovim과 tmux가 이미 설치되어 있으면 빌드를 스킵합니다.
+# 2. 설치 스크립트 실행
+cd ~/config
+chmod +x install.sh
+./install.sh
 
-3. **마무리 작업**  
-   - **Neovim**: `:PlugInstall` 명령어로 플러그인 설치  
-   - **tmux**: tmux 실행 후, prefix + I (기본: Ctrl+b 후 대문자 I)  
-   - **PATH**: Neovim이 `~/neovim_install/bin`, tmux가 `~/.local/bin`에 설치되므로  
-     필요한 경우 `~/.zshrc` 등에 다음을 추가하세요:
-     ```bash
-     export PATH="$HOME/neovim_install/bin:$HOME/.local/bin:$PATH"
-     ```
+# 3. 터미널 재시작 또는
+source ~/.zshrc
+```
 
-## 참고사항
+## 🔄 업데이트 방법
 
-- **이미 설치된 Neovim, tmux**  
-  - `nvim`, `tmux` 명령어가 인식된다면 소스 빌드를 건너뜁니다.  
-- **oh-my-zsh 검증**  
-  - 보안상 스크립트를 받아두고 직접 확인하는 것을 권장하지만,  
-    여기서는 자동화 시나리오를 위해 바로 설치합니다.  
-- **라이센스**  
-  - 이 프로젝트는 MIT License를 사용합니다.  
-  - Neovim, tmux, oh-my-zsh는 각자의 라이센스를 따릅니다.
+설정 파일들이 심볼릭 링크로 연결되어 있으므로, git pull만 하면 됩니다:
+
+```bash
+cd ~/config
+git pull
+```
+
+Tmux 설정을 즉시 적용하려면:
+```bash
+tmux source-file ~/.tmux.conf
+# 또는 tmux 내에서: Ctrl+a r
+```
+
+## ⌨️ 단축키
+
+### Neovim
+
+| 단축키 | 기능 |
+|--------|------|
+| `Ctrl+n` | NERDTree 토글 (파일 탐색기) |
+| `Space+w` | 저장 |
+| `Space+q` | 종료 |
+| `Space+nf` | 현재 파일을 NERDTree에서 찾기 |
+| `Ctrl+h/j/k/l` | 창 이동 |
+| `Tab` | Copilot 제안 수락 |
+
+### Tmux
+
+| 단축키 | 기능 |
+|--------|------|
+| `Ctrl+a \|` | 세로 분할 |
+| `Ctrl+a -` | 가로 분할 |
+| `Ctrl+a h/j/k/l` | 창 이동 |
+| `Ctrl+a r` | 설정 다시 로드 |
+| `Alt+1~5` | 윈도우 빠른 전환 |
+
+### Zsh Aliases
+
+| Alias | 명령어 |
+|-------|--------|
+| `ll` | `ls -alF` |
+| `vim` | `nvim` |
+| `gs` | `git status` |
+| `ta <name>` | `tmux attach -t <name>` |
+| `tn <name>` | `tmux new -s <name>` |
+
+## 🤖 GitHub Copilot 설정
+
+Neovim에서 다음 명령어를 실행하여 Copilot을 설정합니다:
+
+```vim
+:Copilot setup
+```
+
+브라우저에서 GitHub 인증을 진행하면 됩니다.
+
+## 📁 구조
+
+```
+config/
+├── install.sh          # 설치 스크립트
+├── README.md           # 이 파일
+├── nvim/
+│   └── init.vim        # Neovim 설정
+├── tmux/
+│   └── .tmux.conf      # Tmux 설정
+└── zsh/
+    ├── .zshrc          # Zsh 설정
+    └── .p10k.zsh       # Powerlevel10k 테마
+```
+
+## ⚠️ 문제 해결
+
+### Powerlevel10k 폰트가 깨져 보일 때
+Nerd Font를 설치하세요:
+```bash
+brew tap homebrew/cask-fonts
+brew install font-meslo-lg-nerd-font
+```
+터미널 설정에서 해당 폰트를 선택하세요.
+
+### Copilot이 작동하지 않을 때
+1. Node.js 버전 확인: `node --version` (17 이상 필요)
+2. Neovim에서 `:Copilot status` 실행
+3. `:Copilot setup`으로 재인증

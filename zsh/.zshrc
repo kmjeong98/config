@@ -1,98 +1,118 @@
-# ---------------------------------------------
-# ~/.zshrc
-# ---------------------------------------------
+# ============================================================
+# Zsh Configuration
+# ============================================================
 
-# Use powerlevel10k if already installed
-# Load Powerlevel10k theme (Example)
-[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
-
-# Enable command completions
-autoload -Uz compinit
-compinit
-
-# Enable history-based autosuggestions
-# zsh-autosuggestions & zsh-syntax-highlighting assumed installed
-# via a plugin manager or manually
-if [ -f /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh ]; then
-  source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
-fi
-if [ -f /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]; then
-  source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+# ============================================================
+# Powerlevel10k Instant Prompt
+# ============================================================
+# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
+if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
+# ============================================================
+# Powerlevel10k Theme
+# ============================================================
+# Load Powerlevel10k theme
+if [[ -d "$HOME/.p10k" ]]; then
+  source "$HOME/.p10k/powerlevel10k.zsh-theme"
+fi
+
+# Load p10k configuration
+[[ -f ~/.p10k.zsh ]] && source ~/.p10k.zsh
+
+# ============================================================
 # History Settings
+# ============================================================
 HISTFILE=~/.zsh_history
 HISTSIZE=10000
 SAVEHIST=10000
-setopt HIST_IGNORE_ALL_DUPS
+setopt SHARE_HISTORY
+setopt HIST_IGNORE_DUPS
 setopt HIST_IGNORE_SPACE
 setopt HIST_REDUCE_BLANKS
 
-# Default editor
-export EDITOR=vim
+# ============================================================
+# Key Bindings
+# ============================================================
+bindkey -e  # Emacs key bindings
+bindkey '^[[A' up-line-or-search     # Up arrow for history search
+bindkey '^[[B' down-line-or-search   # Down arrow for history search
 
-eval "$(jump shell)"
+# ============================================================
+# Completion
+# ============================================================
+autoload -Uz compinit
+compinit
 
-### 🟢 LS 명령어 개선 (lsd 사용) ###
-alias l='lsd'
-alias ls='lsd'
-alias ll='lsd -l'
-alias la='lsd -la'
-alias lt='lsd --tree'   # 트리 형태로 출력
+zstyle ':completion:*' menu select
+zstyle ':completion:*' matcher-list 'm:{a-z}={A-Z}'
 
-### 🟣 Git 단축 명령어 ###
-alias g='git'
-alias ga='git add .'
+# ============================================================
+# Aliases
+# ============================================================
+
+# List aliases
+alias ls='ls --color=auto'
+alias ll='ls -alF'
+alias la='ls -A'
+alias l='ls -CF'
+
+# Navigation
+alias ..='cd ..'
+alias ...='cd ../..'
+alias ....='cd ../../..'
+
+# Editor
+alias vim='nvim'
+alias vi='nvim'
+
+# Git aliases
 alias gs='git status'
-alias gc='git commit -m'
+alias ga='git add'
+alias gc='git commit'
 alias gp='git push'
-alias gpl='git pull'
-alias gb='git branch'
-alias gco='git checkout'
-alias gm='git merge'
-alias gl='git log --oneline --graph --decorate --all'
-alias gr='git reset --hard HEAD'
-alias grm='git rm'
+alias gl='git log --oneline -n 10'
+alias gd='git diff'
 
-### 🔵 Tmux 관련 ###
+# Tmux aliases
 alias ta='tmux attach -t'
 alias tn='tmux new -s'
 alias tl='tmux list-sessions'
 alias tk='tmux kill-session -t'
-alias trc='nvim ~/.tmux.conf'
 
-### 🟡 편리한 시스템 명령어 ###
-alias df='df -h'             # 디스크 공간 확인 (사람이 읽기 쉬운 형식)
-alias du='du -h --max-depth=1' # 폴더별 용량 확인
-alias free='free -h'         # 메모리 사용량 확인
-alias grep='grep --color=auto'
-alias ip='ip -c'             # IP 주소 보기 (색상 추가)
-alias cls='clear'            # 터미널 클리어
+# Safety aliases
+alias rm='rm -i'
+alias mv='mv -i'
+alias cp='cp -i'
 
-### 🟠 Vim 관련 ###
-alias v='nvim'
-alias vrc='nvim ~/.config/nvim/init.vim'
+# ============================================================
+# PATH Configuration
+# ============================================================
+# Add local bin to PATH (for user-installed tools)
+export PATH="$HOME/.local/bin:$PATH"
 
-### 🟢 Docker 관련 ###
-alias d='docker'
-alias dc='docker-compose'
-alias dps='docker ps --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}"'
-alias dstop='docker stop $(docker ps -q)'
-alias drm='docker rm $(docker ps -aq)'
+# Node.js (if using nvm)
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
 
-### 🟣 Python 관련 ###
-alias py='python3'
-alias pip='pip3'
-alias venv='python3 -m venv venv'
-alias act='source venv/bin/activate'
-alias actl='source ~/venv/bin/activate'
-alias deact='deactivate'
+# ============================================================
+# Environment Variables
+# ============================================================
+export EDITOR='nvim'
+export VISUAL='nvim'
+export LANG='en_US.UTF-8'
 
-### 🟢 Zsh 설정 ###
-alias zrc="nvim ~/.zshrc"
-alias reload="source ~/.zshrc"
-source ~/.p10k/powerlevel10k.zsh-theme
-setopt AUTO_CD
+# ============================================================
+# Custom Functions
+# ============================================================
 
-## Environment settings
-export PATH=$PATH:/home/kunmo/llvm-project/build/bin
+# Create directory and cd into it
+mkcd() {
+  mkdir -p "$1" && cd "$1"
+}
+
+# Quick find
+qf() {
+  find . -name "*$1*"
+}
