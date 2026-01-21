@@ -10,16 +10,35 @@
 
 ## 📋 요구사항
 
-설치 전 다음 도구들이 필요합니다:
+### macOS (Homebrew)
 
-| 도구 | 용도 | 설치 방법 |
-|------|------|-----------|
-| `git` | 버전 관리 | 기본 설치 |
-| `nvim` | 에디터 | `brew install neovim` |
-| `tmux` | 터미널 멀티플렉서 | `brew install tmux` |
-| `zsh` | 쉘 | 기본 설치 (macOS) |
-| `curl` | 다운로드 | 기본 설치 |
-| `node` (17+) | GitHub Copilot | `brew install node` |
+```bash
+brew install neovim tmux node
+```
+
+### Linux (Ubuntu/Debian)
+
+```bash
+# Neovim (최신 버전)
+sudo apt update
+sudo apt install software-properties-common
+sudo add-apt-repository ppa:neovim-ppa/unstable
+sudo apt install neovim tmux zsh curl
+
+# Node.js 20+ (GitHub Copilot용)
+curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
+sudo apt install -y nodejs
+
+# Zsh를 기본 쉘로 설정
+chsh -s $(which zsh)
+```
+
+### Linux (Arch/Manjaro)
+
+```bash
+sudo pacman -S neovim tmux zsh nodejs npm curl
+chsh -s $(which zsh)
+```
 
 ## 🚀 설치 방법
 

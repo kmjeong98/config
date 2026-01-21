@@ -52,8 +52,12 @@ zstyle ':completion:*' matcher-list 'm:{a-z}={A-Z}'
 # Aliases
 # ============================================================
 
-# List aliases
-alias ls='ls --color=auto'
+# List aliases (OS-aware)
+if [[ "$(uname)" == "Darwin" ]]; then
+  alias ls='ls -G'
+else
+  alias ls='ls --color=auto'
+fi
 alias ll='ls -alF'
 alias la='ls -A'
 alias l='ls -CF'
