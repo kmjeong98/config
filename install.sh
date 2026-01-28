@@ -133,6 +133,26 @@ else
 fi
 
 # ============================================================
+# Create symbolic links for Bash (for login persistence)
+# ============================================================
+echo "📦 Setting up Bash profile (for login persistence)..."
+
+# Backup existing files
+if [ -f "$HOME/.bash_profile" ] && [ ! -L "$HOME/.bash_profile" ]; then
+    echo "   Backing up existing .bash_profile to .bash_profile.backup"
+    mv "$HOME/.bash_profile" "$HOME/.bash_profile.backup"
+fi
+if [ -f "$HOME/.bashrc" ] && [ ! -L "$HOME/.bashrc" ]; then
+    echo "   Backing up existing .bashrc to .bashrc.backup"
+    mv "$HOME/.bashrc" "$HOME/.bashrc.backup"
+fi
+
+# Create symbolic links
+ln -sf "$CONFIG_DIR/bash/.bash_profile" "$HOME/.bash_profile"
+ln -sf "$CONFIG_DIR/bash/.bashrc" "$HOME/.bashrc"
+echo "   ✓ Bash profile linked (ensures settings persist on login)"
+
+# ============================================================
 # Create symbolic links for Zsh
 # ============================================================
 echo "📦 Setting up Zsh configuration..."
@@ -233,14 +253,30 @@ echo "📦 Ensuring PATH configuration..."
 echo "   ✓ PATH configuration ready"
 
 # ============================================================
+# Check and suggest default shell change
+# ============================================================
+CURRENT_SHELL=$(basename "$SHELL")
+if [ "$CURRENT_SHELL" != "zsh" ] && command -v zsh &> /dev/null; then
+    echo ""
+    echo "💡 Optional: Change default shell to Zsh for best experience"
+    echo "   Your current shell: $SHELL"
+    echo "   To change to Zsh permanently, run:"
+    echo "      chsh -s \$(which zsh)"
+    echo ""
+    echo "   Note: Your settings will still work on next login thanks to"
+    echo "         .bash_profile, but Zsh provides the best experience!"
+fi
+
+# ============================================================
 # Done
 # ============================================================
 echo ""
 echo "✅ Installation complete!"
 echo ""
 echo "📝 Next steps:"
-echo "   1. Restart your terminal or run:"
-echo "      source ~/.zshrc"
+echo "   1. Log out and log back in, OR restart your terminal, OR run:"
+echo "      source ~/.bash_profile"
+echo "      (or 'source ~/.zshrc' if already using zsh)"
 echo ""
 echo "   2. For GitHub Copilot, run in Neovim:"
 echo "      :Copilot setup"
@@ -249,6 +285,10 @@ echo "🔧 Installed locations:"
 echo "   - Neovim:      $LOCAL_BIN/nvim"
 echo "   - Node.js:     via nvm (~/.nvm)"
 echo "   - Powerlevel10k: ~/.p10k"
+echo ""
+echo "🔒 Settings persistence:"
+echo "   ✓ .bash_profile configured - settings will persist after logout!"
+echo "   ✓ Auto-switches to Zsh if available"
 echo ""
 echo "🎹 Quick reference:"
 echo "   Neovim:"

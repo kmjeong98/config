@@ -121,6 +121,9 @@ Neovim에서 다음 명령어를 실행하여 Copilot을 설정합니다:
 config/
 ├── install.sh          # 설치 스크립트 (sudo 불필요)
 ├── README.md           # 이 파일
+├── bash/
+│   ├── .bash_profile   # Bash 프로필 (로그인 지속성)
+│   └── .bashrc         # Bash 설정
 ├── nvim/
 │   └── init.vim        # Neovim 설정
 ├── tmux/
@@ -131,6 +134,23 @@ config/
 ```
 
 ## ⚠️ 문제 해결
+
+### 로그아웃 후 설정이 사라질 때
+설치 스크립트가 자동으로 `.bash_profile`을 설정하여 로그인 시 환경이 유지됩니다.
+만약 여전히 문제가 있다면:
+
+```bash
+# 로그인 시 자동으로 설정이 로드되는지 확인
+cat ~/.bash_profile
+
+# bash_profile이 없다면 다시 설치
+cd ~/config && ./install.sh
+```
+
+최상의 경험을 위해 기본 셸을 Zsh로 변경하세요:
+```bash
+chsh -s $(which zsh)
+```
 
 ### Powerlevel10k 폰트가 깨져 보일 때
 Nerd Font를 설치하세요:
