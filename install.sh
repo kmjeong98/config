@@ -1,10 +1,10 @@
 #!/bin/bash
 # ============================================================
-# Terminal Environment Installation Script (No sudo required)
+# Terminal Environment Installation Script
 # ============================================================
-# This script installs all dependencies from source/git and
-# creates symbolic links from the config repo to your home
-# directory. Works on restricted servers without sudo access.
+# This script installs all dependencies and creates symbolic
+# links from the config repo to your home directory.
+# If sudo is available, it will be used for system packages.
 # ============================================================
 
 set -e
@@ -12,6 +12,24 @@ set -e
 # Get the directory where this script is located
 CONFIG_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 LOCAL_BIN="$HOME/.local/bin"
+
+# ============================================================
+# Detect sudo availability
+# ============================================================
+SUDO=""
+HAS_SUDO=false
+if sudo -n true 2>/dev/null; then
+    HAS_SUDO=true
+    SUDO="sudo"
+    echo "🔐 sudo 권한 감지됨 - 시스템 패키지로 설치합니다."
+elif sudo -v 2>/dev/null; then
+    HAS_SUDO=true
+    SUDO="sudo"
+    echo "🔐 sudo 권한 감지됨 - 시스템 패키지로 설치합니다."
+else
+    echo "🔓 sudo 권한 없음 - 사용자 디렉토리에 설치합니다."
+fi
+echo ""
 
 echo "🚀 Installing terminal environment configuration..."
 echo "   Config directory: $CONFIG_DIR"
@@ -29,7 +47,17 @@ if command -v nvim &> /dev/null; then
     echo "   ✓ Neovim already installed"
 else
     if [[ "$(uname)" == "Darwin" ]]; then
-        echo "   ⚠️  macOS detected. Please install Neovim via: brew install neovim"
+        if command -v brew &> /dev/null; then
+            echo "   Installing Neovim via Homebrew..."
+            brew install neovim
+            echo "   ✓ Neovim installed via Homebrew"
+        else
+            echo "   ⚠️  Homebrew not found. Please install it first: https://brew.sh"
+        fi
+    elif [ "$HAS_SUDO" = true ]; then
+        echo "   Installing Neovim via apt..."
+        $SUDO apt update && $SUDO apt install -y neovim
+        echo "   ✓ Neovim installed via apt"
     else
         echo "   Downloading Neovim AppImage..."
         NVIM_APPIMAGE="$LOCAL_BIN/nvim.appimage"
@@ -63,7 +91,17 @@ if command -v tmux &> /dev/null; then
     echo "   ✓ Tmux already installed"
 else
     if [[ "$(uname)" == "Darwin" ]]; then
-        echo "   ⚠️  macOS detected. Please install Tmux via: brew install tmux"
+        if command -v brew &> /dev/null; then
+            echo "   Installing Tmux via Homebrew..."
+            brew install tmux
+            echo "   ✓ Tmux installed via Homebrew"
+        else
+            echo "   ⚠️  Homebrew not found. Please install it first: https://brew.sh"
+        fi
+    elif [ "$HAS_SUDO" = true ]; then
+        echo "   Installing Tmux via apt..."
+        $SUDO apt update && $SUDO apt install -y tmux
+        echo "   ✓ Tmux installed via apt"
     else
         echo "   Building Tmux from source..."
         TMUX_SRC="$HOME/.local/src/tmux"
@@ -130,9 +168,26 @@ if command -v zsh &> /dev/null; then
     echo "   ✓ Zsh already available"
     ZSH_AVAILABLE=true
 else
-    echo "   ⚠️  Zsh not found. It usually requires sudo to install."
-    echo "      Skipping Zsh-specific configuration."
-    echo "      Your shell will remain as: $SHELL"
+    if [[ "$(uname)" == "Darwin" ]]; then
+        # macOS usually has zsh pre-installed, but if not:
+        if command -v brew &> /dev/null; then
+            echo "   Installing Zsh via Homebrew..."
+            brew install zsh
+            echo "   ✓ Zsh installed via Homebrew"
+            ZSH_AVAILABLE=true
+        else
+            echo "   ⚠️  Homebrew not found. Please install it first: https://brew.sh"
+        fi
+    elif [ "$HAS_SUDO" = true ]; then
+        echo "   Installing Zsh via apt..."
+        $SUDO apt update && $SUDO apt install -y zsh
+        echo "   ✓ Zsh installed via apt"
+        ZSH_AVAILABLE=true
+    else
+        echo "   ⚠️  Zsh not found. It usually requires sudo to install."
+        echo "      Skipping Zsh-specific configuration."
+        echo "      Your shell will remain as: $SHELL"
+    fi
 fi
 
 # ============================================================
