@@ -34,7 +34,6 @@ set mouse=a
 
 " Line numbers
 set number
-set relativenumber
 
 " Indentation
 set tabstop=4
