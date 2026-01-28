@@ -3,13 +3,13 @@
 ## 🚀 Quick Install (복사-붙여넣기)
 
 ```bash
-git clone https://github.com/kmjeong98/config.git ~/config && cd ~/config && chmod +x install.sh && ./install.sh && source ~/.bash_profile
+git clone https://github.com/kmjeong98/config.git ~/config && cd ~/config && chmod +x install.sh && ./install.sh && source ~/.profile
 ```
 
 ## 🔄 Quick Update (복사-붙여넣기)
 
 ```bash
-cd ~/config && git pull && source ~/.bash_profile
+cd ~/config && git pull && source ~/.profile
 ```
 
 ---
@@ -123,27 +123,30 @@ config/
 ├── README.md           # 이 파일
 ├── bash/
 │   ├── .bash_profile   # Bash 프로필 (로그인 지속성)
-│   └── .bashrc         # Bash 설정
+│   ├── .bashrc         # Bash 설정
+│   └── .profile        # POSIX 셸 프로필 (범용 로그인 지속성)
 ├── nvim/
 │   └── init.vim        # Neovim 설정
 ├── tmux/
 │   └── .tmux.conf      # Tmux 설정
 └── zsh/
     ├── .zshrc          # Zsh 설정
+    ├── .zprofile       # Zsh 프로필 (로그인 지속성)
     └── .p10k.zsh       # Powerlevel10k 테마
 ```
 
 ## ⚠️ 문제 해결
 
 ### 로그아웃 후 설정이 사라질 때
-설치 스크립트가 자동으로 `.bash_profile`을 설정하여 로그인 시 환경이 유지됩니다.
+설치 스크립트가 자동으로 `.profile`, `.bash_profile`, `.zprofile`을 설정하여 로그인 시 환경이 유지됩니다.
 만약 여전히 문제가 있다면:
 
 ```bash
 # 로그인 시 자동으로 설정이 로드되는지 확인
+cat ~/.profile
 cat ~/.bash_profile
 
-# bash_profile이 없다면 다시 설치
+# 파일들이 없다면 다시 설치
 cd ~/config && ./install.sh
 ```
 

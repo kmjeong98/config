@@ -146,10 +146,15 @@ if [ -f "$HOME/.bashrc" ] && [ ! -L "$HOME/.bashrc" ]; then
     echo "   Backing up existing .bashrc to .bashrc.backup"
     mv "$HOME/.bashrc" "$HOME/.bashrc.backup"
 fi
+if [ -f "$HOME/.profile" ] && [ ! -L "$HOME/.profile" ]; then
+    echo "   Backing up existing .profile to .profile.backup"
+    mv "$HOME/.profile" "$HOME/.profile.backup"
+fi
 
 # Create symbolic links
 ln -sf "$CONFIG_DIR/bash/.bash_profile" "$HOME/.bash_profile"
 ln -sf "$CONFIG_DIR/bash/.bashrc" "$HOME/.bashrc"
+ln -sf "$CONFIG_DIR/bash/.profile" "$HOME/.profile"
 echo "   ✓ Bash profile linked (ensures settings persist on login)"
 
 # ============================================================
@@ -162,6 +167,10 @@ if [ -f "$HOME/.zshrc" ] && [ ! -L "$HOME/.zshrc" ]; then
     echo "   Backing up existing .zshrc to .zshrc.backup"
     mv "$HOME/.zshrc" "$HOME/.zshrc.backup"
 fi
+if [ -f "$HOME/.zprofile" ] && [ ! -L "$HOME/.zprofile" ]; then
+    echo "   Backing up existing .zprofile to .zprofile.backup"
+    mv "$HOME/.zprofile" "$HOME/.zprofile.backup"
+fi
 if [ -f "$HOME/.p10k.zsh" ] && [ ! -L "$HOME/.p10k.zsh" ]; then
     echo "   Backing up existing .p10k.zsh to .p10k.zsh.backup"
     mv "$HOME/.p10k.zsh" "$HOME/.p10k.zsh.backup"
@@ -169,6 +178,7 @@ fi
 
 # Create symbolic links
 ln -sf "$CONFIG_DIR/zsh/.zshrc" "$HOME/.zshrc"
+ln -sf "$CONFIG_DIR/zsh/.zprofile" "$HOME/.zprofile"
 ln -sf "$CONFIG_DIR/zsh/.p10k.zsh" "$HOME/.p10k.zsh"
 echo "   ✓ Zsh configuration linked"
 
@@ -275,7 +285,7 @@ echo "✅ Installation complete!"
 echo ""
 echo "📝 Next steps:"
 echo "   1. Log out and log back in, OR restart your terminal, OR run:"
-echo "      source ~/.bash_profile"
+echo "      source ~/.profile"
 echo "      (or 'source ~/.zshrc' if already using zsh)"
 echo ""
 echo "   2. For GitHub Copilot, run in Neovim:"
@@ -287,7 +297,8 @@ echo "   - Node.js:     via nvm (~/.nvm)"
 echo "   - Powerlevel10k: ~/.p10k"
 echo ""
 echo "🔒 Settings persistence:"
-echo "   ✓ .bash_profile configured - settings will persist after logout!"
+echo "   ✓ .profile and .bash_profile configured - settings will persist after logout!"
+echo "   ✓ .zprofile configured for zsh login shells"
 echo "   ✓ Auto-switches to Zsh if available"
 echo ""
 echo "🎹 Quick reference:"
