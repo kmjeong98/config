@@ -302,8 +302,11 @@ echo "✅ Installation complete!"
 echo ""
 echo "📝 Next steps:"
 if [ "$ZSH_AVAILABLE" = true ]; then
-    echo "   1. Restart your terminal or run:"
-    echo "      source ~/.zshrc"
+    echo "   1. 터미널 재시작 또는 zsh 실행:"
+    echo "      exec zsh"
+    echo ""
+    echo "   ⚠️  주의: bash에서 'source ~/.zshrc'를 실행하지 마세요!"
+    echo "      .zshrc는 zsh 전용 파일입니다."
 else
     echo "   1. To use the full configuration, install Zsh first:"
     echo "      sudo apt install zsh   # Then re-run this script"
