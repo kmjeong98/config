@@ -53,6 +53,7 @@ set cursorline
 set signcolumn=yes
 set scrolloff=8
 set wrap
+set showtabline=2
 
 " Encoding
 set encoding=utf-8
@@ -121,6 +122,17 @@ nnoremap <leader>q :q<CR>
 nnoremap <leader>bn :bnext<CR>
 nnoremap <leader>bp :bprevious<CR>
 nnoremap <leader>bd :bdelete<CR>
+
+" Tab navigation
+nnoremap <leader>tn :tabnew<CR>
+nnoremap <leader>tc :tabclose<CR>
+nnoremap gt :tabnext<CR>
+nnoremap gT :tabprevious<CR>
+nnoremap <leader>1 1gt
+nnoremap <leader>2 2gt
+nnoremap <leader>3 3gt
+nnoremap <leader>4 4gt
+nnoremap <leader>5 5gt
 
 " ============================================================
 " NERDTree Settings
