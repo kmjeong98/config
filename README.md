@@ -9,7 +9,7 @@ git clone https://github.com/kmjeong98/config.git ~/config && cd ~/config && chm
 ## 🔄 Quick Update (복사-붙여넣기)
 
 ```bash
-cd ~/config && git pull && source ~/.zshrc
+cd ~/config && git pull && source ~/.bash_profile
 ```
 
 ---
