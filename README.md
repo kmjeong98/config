@@ -3,7 +3,7 @@
 ## 🚀 Quick Install (복사-붙여넣기)
 
 ```bash
-git clone https://github.com/kmjeong98/config.git ~/config && cd ~/config && chmod +x install.sh && ./install.sh && source ~/.zshrc
+git clone https://github.com/kmjeong98/config.git ~/config && cd ~/config && chmod +x install.sh && ./install.sh && source ~/.bash_profile
 ```
 
 ## 🔄 Quick Update (복사-붙여넣기)
