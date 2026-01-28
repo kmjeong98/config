@@ -54,7 +54,6 @@ set ignorecase
 set smartcase
 
 " Appearance
-set termguicolors
 set cursorline
 set signcolumn=yes
 set scrolloff=8
