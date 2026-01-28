@@ -33,7 +33,7 @@ else
     else
         echo "   Downloading Neovim AppImage..."
         NVIM_APPIMAGE="$LOCAL_BIN/nvim.appimage"
-        curl -fLo "$NVIM_APPIMAGE" https://github.com/neovim/neovim/releases/latest/download/nvim.appimage
+        curl -fLo "$NVIM_APPIMAGE" https://github.com/neovim/neovim/releases/latest/download/nvim-linux-x86_64.appimage
         chmod u+x "$NVIM_APPIMAGE"
         
         # Try to extract AppImage (works on most systems)
