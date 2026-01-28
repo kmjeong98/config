@@ -7,13 +7,22 @@
 # ============================================================
 
 # ============================================================
-# Source .bashrc if it exists and we're running bash
+# PATH Configuration
 # ============================================================
-if [ -n "$BASH_VERSION" ]; then
-    if [ -f "$HOME/.bashrc" ]; then
-        . "$HOME/.bashrc"
-    fi
-fi
+export PATH="$HOME/.local/bin:$PATH"
+
+# ============================================================
+# Node.js (nvm)
+# ============================================================
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
+
+# ============================================================
+# Environment Variables
+# ============================================================
+export EDITOR='nvim'
+export VISUAL='nvim'
+export LANG='en_US.UTF-8'
 
 # ============================================================
 # Auto-switch to Zsh if available
