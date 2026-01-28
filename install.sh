@@ -125,43 +125,50 @@ fi
 # ============================================================
 echo "📦 Checking Zsh..."
 
+ZSH_AVAILABLE=false
 if command -v zsh &> /dev/null; then
     echo "   ✓ Zsh already available"
+    ZSH_AVAILABLE=true
 else
     echo "   ⚠️  Zsh not found. It usually requires sudo to install."
+    echo "      Skipping Zsh-specific configuration."
     echo "      Your shell will remain as: $SHELL"
 fi
 
 # ============================================================
-# Create symbolic links for Zsh
+# Create symbolic links for Zsh (only if Zsh is available)
 # ============================================================
-echo "📦 Setting up Zsh configuration..."
+if [ "$ZSH_AVAILABLE" = true ]; then
+    echo "📦 Setting up Zsh configuration..."
 
-# Backup existing files
-if [ -f "$HOME/.zshrc" ] && [ ! -L "$HOME/.zshrc" ]; then
-    echo "   Backing up existing .zshrc to .zshrc.backup"
-    mv "$HOME/.zshrc" "$HOME/.zshrc.backup"
-fi
-if [ -f "$HOME/.p10k.zsh" ] && [ ! -L "$HOME/.p10k.zsh" ]; then
-    echo "   Backing up existing .p10k.zsh to .p10k.zsh.backup"
-    mv "$HOME/.p10k.zsh" "$HOME/.p10k.zsh.backup"
-fi
+    # Backup existing files
+    if [ -f "$HOME/.zshrc" ] && [ ! -L "$HOME/.zshrc" ]; then
+        echo "   Backing up existing .zshrc to .zshrc.backup"
+        mv "$HOME/.zshrc" "$HOME/.zshrc.backup"
+    fi
+    if [ -f "$HOME/.p10k.zsh" ] && [ ! -L "$HOME/.p10k.zsh" ]; then
+        echo "   Backing up existing .p10k.zsh to .p10k.zsh.backup"
+        mv "$HOME/.p10k.zsh" "$HOME/.p10k.zsh.backup"
+    fi
 
-# Create symbolic links
-ln -sf "$CONFIG_DIR/zsh/.zshrc" "$HOME/.zshrc"
-ln -sf "$CONFIG_DIR/zsh/.p10k.zsh" "$HOME/.p10k.zsh"
-echo "   ✓ Zsh configuration linked"
+    # Create symbolic links
+    ln -sf "$CONFIG_DIR/zsh/.zshrc" "$HOME/.zshrc"
+    ln -sf "$CONFIG_DIR/zsh/.p10k.zsh" "$HOME/.p10k.zsh"
+    echo "   ✓ Zsh configuration linked"
 
-# ============================================================
-# Install Powerlevel10k
-# ============================================================
-echo "📦 Setting up Powerlevel10k..."
+    # ============================================================
+    # Install Powerlevel10k
+    # ============================================================
+    echo "📦 Setting up Powerlevel10k..."
 
-if [ ! -d "$HOME/.p10k" ]; then
-    git clone --depth=1 https://github.com/romkatv/powerlevel10k.git "$HOME/.p10k"
-    echo "   ✓ Powerlevel10k installed"
+    if [ ! -d "$HOME/.p10k" ]; then
+        git clone --depth=1 https://github.com/romkatv/powerlevel10k.git "$HOME/.p10k"
+        echo "   ✓ Powerlevel10k installed"
+    else
+        echo "   ✓ Powerlevel10k already installed"
+    fi
 else
-    echo "   ✓ Powerlevel10k already installed"
+    echo "📦 Skipping Zsh configuration (Zsh not installed)..."
 fi
 
 # ============================================================
@@ -239,8 +246,14 @@ echo ""
 echo "✅ Installation complete!"
 echo ""
 echo "📝 Next steps:"
-echo "   1. Restart your terminal or run:"
-echo "      source ~/.zshrc"
+if [ "$ZSH_AVAILABLE" = true ]; then
+    echo "   1. Restart your terminal or run:"
+    echo "      source ~/.zshrc"
+else
+    echo "   1. To use the full configuration, install Zsh first:"
+    echo "      sudo apt install zsh   # Then re-run this script"
+    echo "   Or just restart your terminal to use Neovim and Tmux."
+fi
 echo ""
 echo "   2. For GitHub Copilot, run in Neovim:"
 echo "      :Copilot setup"
