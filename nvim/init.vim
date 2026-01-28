@@ -95,6 +95,9 @@ set background=dark
 " Leader key
 let mapleader = " "
 
+" Exit insert mode with jk
+inoremap jk <Esc>
+
 " NERDTree toggle with Ctrl+n
 nnoremap <C-n> :NERDTreeToggle<CR>
 
