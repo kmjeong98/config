@@ -20,10 +20,6 @@ Plug 'preservim/nerdtree'
 " GitHub Copilot (requires Node.js 17+)
 Plug 'github/copilot.vim'
 
-" Status line
-Plug 'vim-airline/vim-airline'
-Plug 'vim-airline/vim-airline-themes'
-
 " Syntax highlighting
 Plug 'sheerun/vim-polyglot'
 
@@ -143,11 +139,6 @@ let NERDTreeIgnore=['\.git$', '\.DS_Store', '__pycache__', '\.pyc$']
 " Auto-close vim if NERDTree is the only window left
 autocmd BufEnter * if winnr('$') == 1 && exists('b:NERDTree') && b:NERDTree.isTabTree() | quit | endif
 
-" ============================================================
-" Airline Settings
-" ============================================================
-let g:airline_powerline_fonts = 1
-let g:airline#extensions#tabline#enabled = 1
 
 " ============================================================
 " Copilot Settings
