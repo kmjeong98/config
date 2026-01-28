@@ -141,11 +141,14 @@ nnoremap <leader>5 5gt
 " Show hidden files
 let NERDTreeShowHidden=1
 
-" Close NERDTree when opening a file
-let NERDTreeQuitOnOpen=1
+" Keep NERDTree open when opening a file
+let NERDTreeQuitOnOpen=0
 
 " Ignore certain files
 let NERDTreeIgnore=['\.git$', '\.DS_Store', '__pycache__', '\.pyc$']
+
+" Auto-open NERDTree when starting nvim
+autocmd VimEnter * NERDTree | wincmd p
 
 " Auto-close vim if NERDTree is the only window left
 autocmd BufEnter * if winnr('$') == 1 && exists('b:NERDTree') && b:NERDTree.isTabTree() | quit | endif
