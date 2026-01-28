@@ -27,9 +27,6 @@ Plug 'vim-airline/vim-airline-themes'
 " Syntax highlighting
 Plug 'sheerun/vim-polyglot'
 
-" Color scheme
-Plug 'morhetz/gruvbox'
-
 call plug#end()
 
 " ============================================================
@@ -82,11 +79,6 @@ set splitbelow
 " Update time for faster response
 set updatetime=300
 
-" ============================================================
-" Color Scheme
-" ============================================================
-silent! colorscheme gruvbox
-set background=dark
 
 " ============================================================
 " Key Mappings
