@@ -6,6 +6,12 @@
 git clone https://github.com/kmjeong98/config.git ~/config && cd ~/config && chmod +x install.sh && ./install.sh && source ~/.zshrc
 ```
 
+## 🔄 Quick Update (복사-붙여넣기)
+
+```bash
+cd ~/config && git pull && source ~/.zshrc
+```
+
 ---
 
 터미널 기반 개발 환경 설정 파일들입니다. Neovim, Tmux, Zsh를 사용하며, GitHub Copilot과 연동됩니다.
