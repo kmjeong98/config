@@ -120,3 +120,34 @@ mkcd() {
 qf() {
   find . -name "*$1*"
 }
+
+# ============================================================
+# Plugins
+# ============================================================
+
+# Autojump
+[[ -s /usr/share/autojump/autojump.sh ]] && source /usr/share/autojump/autojump.sh
+[[ -s ~/.local/etc/profile.d/autojump.sh ]] && source ~/.local/etc/profile.d/autojump.sh
+[[ -s ~/.autojump/etc/profile.d/autojump.sh ]] && source ~/.autojump/etc/profile.d/autojump.sh
+if [[ "$(uname)" == "Darwin" ]] && command -v brew &> /dev/null; then
+  [[ -s $(brew --prefix)/etc/profile.d/autojump.sh ]] && source $(brew --prefix)/etc/profile.d/autojump.sh
+fi
+
+# Zsh Syntax Highlighting
+if [[ -f "$HOME/.local/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" ]]; then
+  source "$HOME/.local/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
+fi
+
+# Zsh Autosuggestions
+if [[ -f "$HOME/.local/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh" ]]; then
+  source "$HOME/.local/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh"
+fi
+
+# ============================================================
+# Auto Tmux
+# ============================================================
+# Automatically attach to a tmux session named after the user.
+# Only runs if tmux is installed and we are not already inside tmux.
+if command -v tmux &> /dev/null && [ -z "$TMUX" ]; then
+    tmux attach -t "$(whoami)" || tmux new -s "$(whoami)"
+fi

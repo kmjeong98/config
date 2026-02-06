@@ -22,10 +22,6 @@ if sudo -n true 2>/dev/null; then
     HAS_SUDO=true
     SUDO="sudo"
     echo "🔐 sudo 권한 감지됨 - 시스템 패키지로 설치합니다."
-elif sudo -v 2>/dev/null; then
-    HAS_SUDO=true
-    SUDO="sudo"
-    echo "🔐 sudo 권한 감지됨 - 시스템 패키지로 설치합니다."
 else
     echo "🔓 sudo 권한 없음 - 사용자 디렉토리에 설치합니다."
 fi
@@ -224,6 +220,57 @@ if [ "$ZSH_AVAILABLE" = true ]; then
     fi
 else
     echo "📦 Skipping Zsh configuration (Zsh not installed)..."
+fi
+
+# ============================================================
+# Install Zsh Plugins
+# ============================================================
+if [ "$ZSH_AVAILABLE" = true ]; then
+    echo "📦 Installing Zsh plugins..."
+    ZSH_PLUGINS_DIR="$HOME/.local/share/zsh/plugins"
+    mkdir -p "$ZSH_PLUGINS_DIR"
+
+    # zsh-syntax-highlighting
+    if [ ! -d "$ZSH_PLUGINS_DIR/zsh-syntax-highlighting" ]; then
+        echo "   Installing zsh-syntax-highlighting..."
+        git clone --depth=1 https://github.com/zsh-users/zsh-syntax-highlighting.git "$ZSH_PLUGINS_DIR/zsh-syntax-highlighting"
+        echo "   ✓ zsh-syntax-highlighting installed"
+    else
+        echo "   ✓ zsh-syntax-highlighting already installed"
+    fi
+
+    # zsh-autosuggestions
+    if [ ! -d "$ZSH_PLUGINS_DIR/zsh-autosuggestions" ]; then
+        echo "   Installing zsh-autosuggestions..."
+        git clone --depth=1 https://github.com/zsh-users/zsh-autosuggestions.git "$ZSH_PLUGINS_DIR/zsh-autosuggestions"
+        echo "   ✓ zsh-autosuggestions installed"
+    else
+        echo "   ✓ zsh-autosuggestions already installed"
+    fi
+
+    # autojump
+    echo "   Checking autojump..."
+    if command -v autojump &> /dev/null; then
+        echo "   ✓ autojump already installed"
+    else
+        if [[ "$(uname)" == "Darwin" ]]; then
+            if command -v brew &> /dev/null; then
+                brew install autojump
+                echo "   ✓ autojump installed via Homebrew"
+            fi
+        elif [ "$HAS_SUDO" = true ]; then
+            echo "   Installing autojump via apt..."
+            $SUDO apt update && $SUDO apt install -y autojump
+            echo "   ✓ autojump installed via apt"
+        else
+             echo "   Installing autojump from source..."
+             git clone --depth=1 https://github.com/wting/autojump.git "$HOME/.local/src/autojump"
+             cd "$HOME/.local/src/autojump"
+             ./install.py --dest "$HOME/.local"
+             echo "   ✓ autojump installed from source"
+             cd "$CONFIG_DIR"
+        fi
+    fi
 fi
 
 # ============================================================
