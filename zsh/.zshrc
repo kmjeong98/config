@@ -136,11 +136,15 @@ fi
 # Zsh Syntax Highlighting
 if [[ -f "$HOME/.local/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" ]]; then
   source "$HOME/.local/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
+  # Catppuccin Macchiato Theme
+  source "$HOME/.local/share/zsh/themes/catppuccin_macchiato-zsh-syntax-highlighting.zsh" 
 fi
 
 # Zsh Autosuggestions
 if [[ -f "$HOME/.local/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh" ]]; then
   source "$HOME/.local/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh"
+  # Catppuccin Macchiato Autosuggestions
+  ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=#a5adcb'
 fi
 
 # ============================================================

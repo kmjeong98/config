@@ -23,6 +23,9 @@ Plug 'github/copilot.vim'
 " Syntax highlighting
 Plug 'sheerun/vim-polyglot'
 
+" Catppuccin Theme
+Plug 'catppuccin/nvim', { 'as': 'catppuccin' }
+
 call plug#end()
 
 " ============================================================
@@ -162,3 +165,16 @@ autocmd BufEnter * if winnr('$') == 1 && exists('b:NERDTree') && b:NERDTree.isTa
 " Ctrl+]: Dismiss suggestion
 " Alt+]: Next suggestion
 " Alt+[: Previous suggestion
+
+" ============================================================
+" Colorscheme
+" ============================================================
+lua << EOF
+require("catppuccin").setup({
+    flavour = "macchiato", -- latte, frappe, macchiato, mocha
+    transparent_background = false,
+    term_colors = true,
+})
+EOF
+
+colorscheme catppuccin
