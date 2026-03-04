@@ -146,12 +146,3 @@ if [[ -f "$HOME/.local/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions
   # Catppuccin Macchiato Autosuggestions
   ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=#a5adcb'
 fi
-
-# ============================================================
-# Auto Tmux
-# ============================================================
-# Automatically attach to a tmux session named after the user.
-# Only runs if tmux is installed and we are not already inside tmux.
-if command -v tmux &> /dev/null && [ -z "$TMUX" ]; then
-    tmux attach -t "$(whoami)" || tmux new -s "$(whoami)"
-fi
