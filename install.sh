@@ -2,9 +2,10 @@
 # ============================================================
 # Terminal Environment Installation Script
 # ============================================================
-# This script installs all dependencies and creates symbolic
-# links from the config repo to your home directory.
-# If sudo is available, it will be used for system packages.
+# This script installs all tools and configs into the user's
+# home directory (~/.local/, ~/.config/, etc.) so it can be
+# used on shared servers without affecting other users.
+# The config repo can be safely deleted after installation.
 # ============================================================
 
 set -e
@@ -13,33 +14,20 @@ set -e
 CONFIG_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 LOCAL_BIN="$HOME/.local/bin"
 
-# ============================================================
-# Detect sudo availability
-# ============================================================
-SUDO=""
-HAS_SUDO=false
-if sudo -n true 2>/dev/null; then
-    HAS_SUDO=true
-    SUDO="sudo"
-    echo "sudo detected - installing via system packages."
-else
-    echo "No sudo available - installing to user directory."
-fi
-echo ""
-
 echo "🚀 Installing terminal environment configuration..."
 echo "   Config directory: $CONFIG_DIR"
+echo "   All tools will be installed under \$HOME"
 echo ""
 
 # Create local bin directory
 mkdir -p "$LOCAL_BIN"
 
 # ============================================================
-# Install Neovim (AppImage for Linux, brew check for macOS)
+# Install Neovim
 # ============================================================
 echo "📦 Setting up Neovim..."
 
-if command -v nvim &> /dev/null; then
+if [ -x "$LOCAL_BIN/nvim" ] || command -v nvim &> /dev/null; then
     echo "   ✓ Neovim already installed"
 else
     if [[ "$(uname)" == "Darwin" ]]; then
@@ -50,22 +38,18 @@ else
         else
             echo "   ⚠️  Homebrew not found. Please install it first: https://brew.sh"
         fi
-    elif [ "$HAS_SUDO" = true ]; then
-        echo "   Installing Neovim via apt..."
-        $SUDO apt update && $SUDO apt install -y neovim
-        echo "   ✓ Neovim installed via apt"
     else
         echo "   Downloading Neovim AppImage..."
         NVIM_APPIMAGE="$LOCAL_BIN/nvim.appimage"
         curl -fLo "$NVIM_APPIMAGE" https://github.com/neovim/neovim/releases/latest/download/nvim-linux-x86_64.appimage
         chmod u+x "$NVIM_APPIMAGE"
-        
-        # Try to extract AppImage (works on most systems)
+
+        # Try to run AppImage directly (requires FUSE)
         if "$NVIM_APPIMAGE" --version &> /dev/null; then
             ln -sf "$NVIM_APPIMAGE" "$LOCAL_BIN/nvim"
             echo "   ✓ Neovim installed via AppImage"
         else
-            # If AppImage doesn't work, extract it
+            # Extract AppImage if FUSE is not available
             echo "   Extracting AppImage (FUSE not available)..."
             cd "$HOME/.local"
             "$NVIM_APPIMAGE" --appimage-extract &> /dev/null || true
@@ -79,7 +63,7 @@ else
 fi
 
 # ============================================================
-# Install Tmux from source
+# Install Tmux
 # ============================================================
 echo "📦 Setting up Tmux..."
 
@@ -94,23 +78,19 @@ else
         else
             echo "   ⚠️  Homebrew not found. Please install it first: https://brew.sh"
         fi
-    elif [ "$HAS_SUDO" = true ]; then
-        echo "   Installing Tmux via apt..."
-        $SUDO apt update && $SUDO apt install -y tmux
-        echo "   ✓ Tmux installed via apt"
     else
         echo "   Building Tmux from source..."
         TMUX_SRC="$HOME/.local/src/tmux"
         mkdir -p "$HOME/.local/src"
-        
+
         if [ ! -d "$TMUX_SRC" ]; then
             git clone --depth=1 https://github.com/tmux/tmux.git "$TMUX_SRC"
         fi
-        
+
         cd "$TMUX_SRC"
         if [ -f "configure" ] || sh autogen.sh 2>/dev/null; then
             ./configure --prefix="$HOME/.local" && make && make install
-            echo "   ✓ Tmux installed from source"
+            echo "   ✓ Tmux installed to ~/.local/bin/tmux"
         else
             echo "   ⚠️  Could not build Tmux (missing build dependencies)"
             echo "      Try: apt install automake libevent-dev ncurses-dev"
@@ -120,7 +100,7 @@ else
 fi
 
 # ============================================================
-# Install Node.js via nvm (no sudo required)
+# Install Node.js via nvm
 # ============================================================
 echo "📦 Setting up Node.js..."
 
@@ -155,7 +135,7 @@ else
 fi
 
 # ============================================================
-# Install Zsh (check if available)
+# Check Zsh availability
 # ============================================================
 echo "📦 Checking Zsh..."
 
@@ -165,7 +145,6 @@ if command -v zsh &> /dev/null; then
     ZSH_AVAILABLE=true
 else
     if [[ "$(uname)" == "Darwin" ]]; then
-        # macOS usually has zsh pre-installed, but if not:
         if command -v brew &> /dev/null; then
             echo "   Installing Zsh via Homebrew..."
             brew install zsh
@@ -174,25 +153,20 @@ else
         else
             echo "   ⚠️  Homebrew not found. Please install it first: https://brew.sh"
         fi
-    elif [ "$HAS_SUDO" = true ]; then
-        echo "   Installing Zsh via apt..."
-        $SUDO apt update && $SUDO apt install -y zsh
-        echo "   ✓ Zsh installed via apt"
-        ZSH_AVAILABLE=true
     else
-        echo "   ⚠️  Zsh not found. It usually requires sudo to install."
+        echo "   ⚠️  Zsh not found and requires sudo to install."
         echo "      Skipping Zsh-specific configuration."
         echo "      Your shell will remain as: $SHELL"
     fi
 fi
 
 # ============================================================
-# Create symbolic links for Zsh (only if Zsh is available)
+# Copy Zsh config files (only if Zsh is available)
 # ============================================================
 if [ "$ZSH_AVAILABLE" = true ]; then
     echo "📦 Setting up Zsh configuration..."
 
-    # Backup existing files
+    # Backup existing files (skip if already a symlink from previous install)
     if [ -f "$HOME/.zshrc" ] && [ ! -L "$HOME/.zshrc" ]; then
         echo "   Backing up existing .zshrc to .zshrc.backup"
         mv "$HOME/.zshrc" "$HOME/.zshrc.backup"
@@ -202,10 +176,13 @@ if [ "$ZSH_AVAILABLE" = true ]; then
         mv "$HOME/.p10k.zsh" "$HOME/.p10k.zsh.backup"
     fi
 
-    # Create symbolic links
-    ln -sf "$CONFIG_DIR/zsh/.zshrc" "$HOME/.zshrc"
-    ln -sf "$CONFIG_DIR/zsh/.p10k.zsh" "$HOME/.p10k.zsh"
-    echo "   ✓ Zsh configuration linked"
+    # Remove old symlinks if present
+    rm -f "$HOME/.zshrc" "$HOME/.p10k.zsh"
+
+    # Copy config files
+    cp "$CONFIG_DIR/zsh/.zshrc" "$HOME/.zshrc"
+    cp "$CONFIG_DIR/zsh/.p10k.zsh" "$HOME/.p10k.zsh"
+    echo "   ✓ Zsh configuration copied"
 
     # ============================================================
     # Install Powerlevel10k
@@ -258,23 +235,22 @@ if [ "$ZSH_AVAILABLE" = true ]; then
                 brew install autojump
                 echo "   ✓ autojump installed via Homebrew"
             fi
-        elif [ "$HAS_SUDO" = true ]; then
-            echo "   Installing autojump via apt..."
-            $SUDO apt update && $SUDO apt install -y autojump
-            echo "   ✓ autojump installed via apt"
         else
-             echo "   Installing autojump from source..."
-             git clone --depth=1 https://github.com/wting/autojump.git "$HOME/.local/src/autojump"
-             cd "$HOME/.local/src/autojump"
-             ./install.py --dest "$HOME/.local"
-             echo "   ✓ autojump installed from source"
-             cd "$CONFIG_DIR"
+            echo "   Installing autojump from source..."
+            AUTOJUMP_SRC="$HOME/.local/src/autojump"
+            if [ ! -d "$AUTOJUMP_SRC" ]; then
+                git clone --depth=1 https://github.com/wting/autojump.git "$AUTOJUMP_SRC"
+            fi
+            cd "$AUTOJUMP_SRC"
+            ./install.py --dest "$HOME/.local"
+            echo "   ✓ autojump installed from source"
+            cd "$CONFIG_DIR"
         fi
     fi
 fi
 
 # ============================================================
-# Create symbolic links for Tmux
+# Copy Tmux config files
 # ============================================================
 echo "📦 Setting up Tmux configuration..."
 
@@ -283,11 +259,14 @@ if [ -f "$HOME/.tmux.conf" ] && [ ! -L "$HOME/.tmux.conf" ]; then
     mv "$HOME/.tmux.conf" "$HOME/.tmux.conf.backup"
 fi
 
-ln -sf "$CONFIG_DIR/tmux/.tmux.conf" "$HOME/.tmux.conf"
-echo "   ✓ Tmux configuration linked"
+# Remove old symlink if present
+rm -f "$HOME/.tmux.conf"
+
+cp "$CONFIG_DIR/tmux/.tmux.conf" "$HOME/.tmux.conf"
+echo "   ✓ Tmux configuration copied"
 
 # ============================================================
-# Create symbolic links for Neovim
+# Copy Neovim config files
 # ============================================================
 echo "📦 Setting up Neovim configuration..."
 
@@ -298,8 +277,11 @@ if [ -d "$HOME/.config/nvim" ] && [ ! -L "$HOME/.config/nvim" ]; then
     mv "$HOME/.config/nvim" "$HOME/.config/nvim.backup"
 fi
 
-ln -sf "$CONFIG_DIR/nvim" "$HOME/.config/nvim"
-echo "   ✓ Neovim configuration linked"
+# Remove old symlink if present
+rm -f "$HOME/.config/nvim"
+
+cp -r "$CONFIG_DIR/nvim" "$HOME/.config/nvim"
+echo "   ✓ Neovim configuration copied"
 
 # ============================================================
 # Install vim-plug
@@ -346,6 +328,7 @@ echo "   ✓ PATH configuration ready"
 # ============================================================
 echo ""
 echo "✅ Installation complete!"
+echo "   You can safely delete the config repo now."
 echo ""
 echo "📝 Next steps:"
 if [ "$ZSH_AVAILABLE" = true ]; then
@@ -364,9 +347,14 @@ echo "   2. For GitHub Copilot, run in Neovim:"
 echo "      :Copilot setup"
 echo ""
 echo "🔧 Installed locations:"
-echo "   - Neovim:      $LOCAL_BIN/nvim"
-echo "   - Node.js:     via nvm (~/.nvm)"
-echo "   - Powerlevel10k: ~/.p10k"
+echo "   - Neovim:        ~/.local/bin/nvim"
+echo "   - Neovim config: ~/.config/nvim/"
+echo "   - Tmux config:   ~/.tmux.conf"
+echo "   - Node.js:       ~/.nvm/"
+if [ "$ZSH_AVAILABLE" = true ]; then
+echo "   - Zsh config:    ~/.zshrc"
+echo "   - Powerlevel10k: ~/.p10k/"
+fi
 echo ""
 echo "🎹 Quick reference:"
 echo "   Neovim:"
